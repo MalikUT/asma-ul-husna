@@ -7,3 +7,6 @@
 
 # Local preview config (optional to keep)
 # .claude/launch.json
+
+# Claude Code editor files
+.claude/
