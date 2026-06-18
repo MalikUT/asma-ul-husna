@@ -1,0 +1,389 @@
+/* =========================================================
+   styles.css — Asma ul-Husna
+   Apple-clean, minimal, neutral tones with soft gradients.
+   Colours/spacing live in CSS variables so theming is easy.
+   ========================================================= */
+
+:root {
+  --bg:          #f6f5f3;
+  --bg-2:        #efedea;
+  --surface:     #ffffff;
+  --surface-2:   #fbfaf9;
+  --ink:         #1c1c1e;
+  --ink-soft:    #6b6b70;
+  --ink-faint:   #9a9aa0;
+  --line:        rgba(0,0,0,0.07);
+  --accent:      #1b8a6b;   /* calm emerald */
+  --accent-soft: #e7f3ee;
+  --gold:        #b6925a;
+  --shadow:      0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06);
+  --shadow-lg:   0 8px 24px rgba(0,0,0,0.08), 0 30px 70px rgba(0,0,0,0.14);
+  --radius:      22px;
+  --radius-sm:   14px;
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --maxw:        1080px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #0e0f10;
+    --bg-2:      #15171a;
+    --surface:   #17191c;
+    --surface-2: #1d2024;
+    --ink:       #f3f3f4;
+    --ink-soft:  #a6a7ad;
+    --ink-faint: #6f7177;
+    --line:      rgba(255,255,255,0.09);
+    --accent:    #34c79c;
+    --accent-soft: rgba(52,199,156,0.12);
+    --gold:      #d3ac72;
+    --shadow:    0 1px 2px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.5);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.55);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Soft ambient gradient behind everything */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 50% -5%, var(--accent-soft), transparent 70%),
+    radial-gradient(40% 40% at 90% 10%, rgba(182,146,90,0.10), transparent 70%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 22px 24px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 10px;
+  padding: 4px 10px;
+  letter-spacing: 1px;
+}
+.brand-text { font-weight: 600; letter-spacing: -0.01em; }
+
+.tabs {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .25s var(--ease), background .25s var(--ease);
+}
+.tab.is-active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+/* ---------- Layout ---------- */
+main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
+.view { display: none; animation: fade .5s var(--ease); }
+.view.is-active { display: block; }
+
+.eyebrow {
+  text-align: center;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 18px;
+}
+
+/* ---------- Hero (name of the day) ---------- */
+.hero {
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  padding: 48px 28px 36px;
+  margin: 16px auto 40px;
+  max-width: 720px;
+  position: relative;
+  overflow: hidden;
+  animation: rise .7s var(--ease) both;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -40%; left: 50%; transform: translateX(-50%);
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+.hero > * { position: relative; z-index: 1; }
+
+.hero-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 22px;
+}
+.hero-arabic {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  font-weight: 600;
+  font-size: clamp(56px, 13vw, 104px);
+  line-height: 1.15;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+}
+.hero-translit {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.hero-english {
+  font-size: clamp(16px, 2.6vw, 20px);
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.hero-urdu {
+  font-family: "Noto Nastaliq Urdu", serif;
+  font-size: clamp(20px, 3.4vw, 26px);
+  line-height: 2.1;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.hero-ref, .modal-ref { margin: 8px 0 4px; min-height: 1px; }
+.ref-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 6px 14px;
+  text-decoration: none;
+  transition: transform .2s var(--ease), opacity .2s var(--ease);
+}
+.ref-pill:hover { transform: translateY(-1px); opacity: .9; }
+.ref-pill::before { content: "❝"; font-size: 12px; opacity: .7; }
+
+.hero-actions { margin-top: 20px; }
+
+/* Learn button */
+.learn-btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all .25s var(--ease);
+}
+.learn-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.learn-btn.is-learned {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.learn-btn.is-learned::before { content: "✓ "; }
+
+/* ---------- Progress ---------- */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 720px;
+  margin: 0 auto 44px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  box-shadow: var(--shadow);
+}
+.progress-ring {
+  --pct: 0;
+  width: 70px; height: 70px;
+  flex: 0 0 70px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background:
+    radial-gradient(closest-side, var(--surface) 76%, transparent 77%),
+    conic-gradient(var(--accent) calc(var(--pct) * 1%), var(--line) 0);
+  font-weight: 700;
+  line-height: 1;
+  transition: --pct .6s var(--ease);
+}
+.progress-ring span { font-size: 20px; }
+.progress-ring small { font-size: 11px; color: var(--ink-faint); display: block; }
+.progress-label { display: flex; flex-direction: column; gap: 3px; }
+.progress-label strong { font-size: 15px; }
+.progress-label span { font-size: 13px; color: var(--ink-soft); }
+
+/* ---------- Grid of all 99 ---------- */
+.grid-heading {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  padding-bottom: 40px;
+}
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .2s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: transparent; }
+.card-num { font-size: 11px; color: var(--ink-faint); font-weight: 600; }
+.card-arabic {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  margin: 4px 0 6px;
+  direction: rtl;
+}
+.card-translit { font-size: 13px; font-weight: 600; }
+.card-english { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+.card.is-today { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.card.is-today .card-num::after { content: " · today"; color: var(--gold); }
+.card.is-learned::before {
+  content: "✓";
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 11px;
+  color: #fff;
+  background: var(--accent);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: grid; place-content: center;
+}
+
+/* ---------- Modal ---------- */
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; }
+.modal[hidden] { display: none; }
+.modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(20,20,25,0.45);
+  backdrop-filter: blur(6px);
+  animation: fade .3s var(--ease);
+}
+.modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+  padding: 40px 28px 30px;
+  text-align: center;
+  animation: pop .35s var(--ease);
+}
+.modal-close {
+  position: absolute; top: 14px; right: 16px;
+  border: 0; background: transparent;
+  font-size: 26px; line-height: 1;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+.modal-index { font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: .06em; }
+.modal-arabic {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  font-weight: 600;
+  font-size: clamp(44px, 16vw, 72px);
+  margin: 10px 0 12px;
+}
+.modal-translit { font-size: 22px; font-weight: 600; }
+.modal-english { color: var(--ink-soft); margin: 4px 0 8px; }
+.modal-urdu { font-family: "Noto Nastaliq Urdu", serif; font-size: 22px; line-height: 2; margin-bottom: 14px; }
+.modal-card .learn-btn { margin-top: 14px; }
+
+/* ---------- Quiz placeholder ---------- */
+.quiz-placeholder {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--ink-soft);
+  font-size: 18px;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  text-align: center;
+  padding: 30px 20px 50px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+
+/* ---------- Animations ---------- */
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes pop  { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@media (max-width: 560px) {
+  .site-header { flex-direction: column; align-items: stretch; gap: 12px; }
+  .tabs { align-self: center; }
+  .progress { flex-direction: row; }
+  .hero { padding: 36px 20px 30px; border-radius: 26px; }
+}

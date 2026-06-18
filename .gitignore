@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Editor noise
+.vscode/
+*.swp
+
+# Local preview config (optional to keep)
+# .claude/launch.json
