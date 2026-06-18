@@ -150,8 +150,8 @@
     btn.onclick = () => { toggleLearned(todayName.id); setLearnBtn(btn, todayName.id); };
 
     const dl = $("#hero-download");
-    dl.textContent = canShareFiles ? "↑ Share card" : "↓ Download card";
-    dl.onclick = () => exportNameCard("#hero", todayName, false);
+    dl.textContent = "↓ Download card";
+    dl.onclick = () => exportNameCard("#hero", todayName, true);
   }
 
   /* ---------- Progress ---------- */
@@ -203,8 +203,8 @@
     btn.onclick = () => { toggleLearned(name.id); setLearnBtn(btn, name.id); };
 
     const dl = $("#modal-download");
-    dl.textContent = canShareFiles ? "↑ Share" : "↓ Download";
-    dl.onclick = () => exportNameCard("#modal-card", name, false);
+    dl.textContent = "↓ Download";
+    dl.onclick = () => exportNameCard("#modal-card", name, true);
 
     $("#modal").hidden = false;
     document.body.style.overflow = "hidden";
