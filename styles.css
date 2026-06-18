@@ -18,6 +18,9 @@
   --line:        rgba(0,0,0,0.13);
   --line-soft:   rgba(0,0,0,0.07);
   --fill:        #f1f1ef;
+  --on-ink:      #ffffff;   /* text/colour that sits on top of --ink fills */
+  --correct:     #1f7a3f;   /* quiz: right answer (green) */
+  --wrong:       #b3261e;   /* quiz: wrong answer (red) */
 
   /* Type */
   --serif:  "Newsreader", Georgia, "Times New Roman", serif;
@@ -32,6 +35,31 @@
   --ease:      cubic-bezier(0.22, 1, 0.36, 1);
   --maxw:      1000px;
 }
+
+/* Dark theme — toggled by adding .dark to <body> */
+body.dark {
+  --bg:          #0d0e0f;
+  --bg-2:        #141618;
+  --surface:     #161819;
+  --surface-2:   #1d2023;
+  --ink:         #f1f1ef;
+  --ink-soft:    #a7a8a4;
+  --ink-faint:   #70726e;
+  --line:        rgba(255,255,255,0.13);
+  --line-soft:   rgba(255,255,255,0.06);
+  --fill:        #1f2123;
+  --on-ink:      #0d0e0f;
+  --correct:     #2e9d57;
+  --wrong:       #d24a43;
+  --shadow:      0 1px 1px rgba(0,0,0,0.4), 0 10px 30px rgba(0,0,0,0.5);
+  --shadow-lg:   0 10px 30px rgba(0,0,0,0.55), 0 30px 80px rgba(0,0,0,0.6);
+}
+body.dark .bg-glow {
+  background:
+    radial-gradient(55% 45% at 50% -8%, rgba(255,255,255,0.05), transparent 70%),
+    linear-gradient(180deg, #0d0e0f, var(--bg-2));
+}
+body.dark .modal-backdrop { background: rgba(0,0,0,0.6); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -112,7 +140,7 @@ body.layout-a .tabs     { order: 3; }
   cursor: pointer;
   transition: color .25s var(--ease), background .25s var(--ease);
 }
-.tab.is-active { background: var(--ink); color: #fff; }
+.tab.is-active { background: var(--ink); color: var(--on-ink); }
 
 /* ---------- Masthead ---------- */
 .masthead {
@@ -278,7 +306,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 .learn-btn:hover { background: var(--fill); }
 .learn-btn.is-learned {
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
 }
 .learn-btn.is-learned::before { content: "✓ "; }
 
@@ -366,7 +394,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   position: absolute;
   top: 8px; left: 10px;
   font-size: 10px;
-  color: #fff;
+  color: var(--on-ink);
   background: var(--ink);
   width: 17px; height: 17px;
   border-radius: 50%;
@@ -443,7 +471,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   text-transform: uppercase;
   border: 1px solid var(--ink);
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
   border-radius: 999px;
   padding: 14px 30px;
   cursor: pointer;
@@ -482,13 +510,34 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 }
 .quiz-option:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
 .quiz-option:disabled { cursor: default; }
-.quiz-option.is-correct { background: var(--ink); color: #fff; border-color: var(--ink); }
-.quiz-option.is-wrong { border-color: var(--ink); text-decoration: line-through; color: var(--ink-faint); }
+.quiz-option.is-correct { background: var(--correct); color: #fff; border-color: var(--correct); -webkit-text-fill-color: #fff; }
+.quiz-option.is-wrong   { background: var(--wrong);   color: #fff; border-color: var(--wrong);   -webkit-text-fill-color: #fff; }
 
 #quiz-next { margin-top: 22px; }
 
 .quiz-score { font-family: var(--serif); font-size: clamp(56px, 14vw, 84px); line-height: 1; margin-bottom: 6px; }
 .quiz-score span { color: var(--ink-faint); font-size: 0.42em; }
+
+/* Result: stamp + actions */
+.quiz-stamp { margin-top: 22px; }
+.quiz-actions { margin-top: 22px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+/* Theme toggle (above footer) */
+.theme-row { text-align: center; padding: 10px 20px 0; }
+.theme-toggle {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all .22s var(--ease);
+}
+.theme-toggle:hover { background: var(--fill); transform: translateY(-1px); }
 
 /* ---------- Footer ---------- */
 .site-footer {
@@ -498,7 +547,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   margin-top: 20px;
 }
 .footer-main { font-size: 16px; color: var(--ink); }
-.footer-main .heart { color: #0c0c0c; }
+.footer-main .heart { color: var(--ink); }
 .footer-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint); margin-top: 8px; }
 .site-footer a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 
