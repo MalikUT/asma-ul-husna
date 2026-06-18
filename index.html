@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Asma ul-Husna — The 99 Names of Allah</title>
-  <meta name="description" content="Discover, remember and understand the 99 Names of Allah (Asma ul-Husna) — Arabic, romanised, with meanings in English and Urdu, and a daily highlighted name." />
+  <title>99 Beautiful Names of Allah — Asma ul-Husna</title>
+  <meta name="description" content="Discover, remember and recite the 99 beautiful names of Allah (Asma ul-Husna) — Arabic, romanised, with meanings in English and Urdu, and a name chosen for you each day." />
 
-  <!-- Fonts: Inter (Latin UI), IBM Plex Sans Arabic (Arabic), Noto Nastaliq Urdu (Urdu) -->
+  <!-- Fonts: Newsreader (serif display, Co-Star vibe), IBM Plex Mono (labels),
+       Amiri (traditional Arabic), Noto Nastaliq Urdu (Urdu) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,26 +18,26 @@
   <div class="bg-glow" aria-hidden="true"></div>
 
   <header class="site-header">
-    <div class="brand">
-      <span class="brand-mark">۹۹</span>
-      <span class="brand-text">Asma ul-Husna</span>
-    </div>
-
+    <p class="topdate" id="topdate"><!-- filled by app.js --></p>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab is-active" id="tab-names" role="tab" aria-selected="true" aria-controls="view-names">Names</button>
       <button class="tab" id="tab-quiz" role="tab" aria-selected="false" aria-controls="view-quiz">Quiz</button>
     </nav>
   </header>
 
+  <section class="masthead">
+    <h1 class="masthead-title">99 Beautiful Names of Allah</h1>
+    <p class="masthead-sub" lang="ar" dir="rtl">أسماء الله الحسنى</p>
+  </section>
+
   <main>
     <!-- ============ NAMES VIEW ============ -->
     <section id="view-names" class="view is-active" role="tabpanel" aria-labelledby="tab-names">
-      <p class="eyebrow">The 99 Names of Allah</p>
 
       <!-- Today's highlighted name -->
       <article class="hero" id="hero" aria-live="polite">
-        <span class="hero-badge" id="hero-badge">Name of the day</span>
-        <h1 class="hero-arabic" id="hero-arabic" lang="ar" dir="rtl"></h1>
+        <span class="hero-badge">The name we picked for you to recite &amp; learn today</span>
+        <h2 class="hero-arabic" id="hero-arabic" lang="ar" dir="rtl"></h2>
         <p class="hero-translit" id="hero-translit"></p>
         <p class="hero-english" id="hero-english"></p>
         <p class="hero-urdu" id="hero-urdu" lang="ur" dir="rtl"></p>
@@ -53,15 +54,15 @@
         </div>
         <div class="progress-label">
           <strong>Your journey</strong>
-          <span id="progress-sub">Tap a name, then “Mark as learned” to track your progress.</span>
+          <span id="progress-sub">Open a name, then “Mark as learned” to keep your own count.</span>
         </div>
       </div>
 
-      <h2 class="grid-heading">All 99 Names</h2>
+      <h3 class="grid-heading">All 99 Names</h3>
       <div class="grid" id="grid" role="list"></div>
     </section>
 
-    <!-- ============ QUIZ VIEW (built in phase 2) ============ -->
+    <!-- ============ QUIZ VIEW (built next) ============ -->
     <section id="view-quiz" class="view" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div class="quiz-placeholder">
         <p>The flash quiz is coming next ✨</p>
@@ -85,7 +86,8 @@
   </div>
 
   <footer class="site-footer">
-    <p>Made with reverence · Quran references link to <a href="https://quran.com" target="_blank" rel="noopener">quran.com</a> for verification.</p>
+    <p class="footer-main">Made with <span class="heart">♥</span> by AClan Global · Remember us in your prayers</p>
+    <p class="footer-sub">Quran references link to <a href="https://quran.com" target="_blank" rel="noopener">quran.com</a> for verification.</p>
   </footer>
 
   <!-- data first, then logic -->
