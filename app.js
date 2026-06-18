@@ -3,8 +3,9 @@
    - "Name of the day" (same for everyone, changes daily)
    - Hero + grid of all 99 + detail popup
    - "Learned" tracking (saved on this device via localStorage)
-   - Download a name card as a PNG image (date + AClan brand stamped on)
-   - Flash quiz: match the Arabic name to its English meaning
+   - Save/share a name card as an image (date + AClan line stamped on)
+   - Flash quiz with green/red feedback + shareable score card
+   - Light/Dark theme toggle (saved on this device)
    Data comes from data.js (the NAMES array).
    ========================================================= */
 
@@ -14,6 +15,8 @@
   const $ = (sel) => document.querySelector(sel);
   const LEARNED_KEY = "asma_learned_v1";
   const BEST_KEY = "asma_quiz_best_v1";
+  const THEME_KEY = "asma_theme_v1";
+  const REMINDER_LINE = "For daily name reminders, visit theone.aclanglobal.com";
 
   /* ---------- Learned set (per device) ---------- */
   function loadLearned() {
@@ -41,14 +44,18 @@
   function renderDate() {
     const greg = fmtGreg({ weekday: "long", day: "numeric", month: "long", year: "numeric" });
     const hijri = fmtHijri({ day: "numeric", month: "long", year: "numeric" });
-    // Islamic formatter already includes the era ("AH").
     $("#topdate").textContent = hijri ? `${greg}  ·  ${hijri} (Pakistan)` : greg;
   }
-  // Compact date stamped onto downloaded cards
   function dateForCard() {
     const greg = fmtGreg({ day: "numeric", month: "long", year: "numeric" });
     const hijri = fmtHijri({ day: "numeric", month: "long", year: "numeric" });
     return hijri ? `${hijri}  ·  ${greg}` : greg;
+  }
+  function dateTimeForCard() {
+    const greg = fmtGreg({ day: "numeric", month: "long", year: "numeric" });
+    const hijri = fmtHijri({ day: "numeric", month: "long", year: "numeric" });
+    const time = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit" }).format(new Date());
+    return `${hijri ? hijri + "  ·  " : ""}${greg}, ${time} PKT`;
   }
 
   /* ---------- Reference pill (links to quran.com) ---------- */
@@ -70,6 +77,66 @@
     renderGrid();
   }
 
+  /* ---------- Image export (save / share) ---------- */
+  const canShareFiles = !!(navigator.canShare && navigator.share);
+
+  // Render an element to a PNG blob. footerHtml (optional) is stamped on for the image only.
+  function renderCardCanvas(rootSel, footerHtml) {
+    const node = $(rootSel);
+    return html2canvas(node, {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true,
+      onclone: (doc) => {
+        doc.body.classList.remove("dark"); // exported card is always the light version
+        // Freeze animations/transitions so we never capture a mid-fade (washed-out) frame
+        const s = doc.createElement("style");
+        s.textContent = "*{animation:none !important;transition:none !important;}";
+        doc.head.appendChild(s);
+        const clone = doc.querySelector(rootSel);
+        clone.style.opacity = "1";
+        clone.style.transform = "none";
+        clone.querySelectorAll(".hero-actions, .modal-actions, .modal-close, .quiz-actions")
+             .forEach((el) => (el.style.display = "none"));
+        if (footerHtml) {
+          const foot = doc.createElement("div");
+          foot.className = "dl-foot";
+          foot.innerHTML = footerHtml;
+          clone.appendChild(foot);
+        }
+      },
+    }).then((canvas) => new Promise((res) => canvas.toBlob((b) => res(b), "image/png")));
+  }
+
+  // Deliver a blob: Share sheet on mobile (saves to Photos / sends to socials), else download.
+  async function deliver(blob, filename, shareText, forceDownload) {
+    const file = new File([blob], filename, { type: "image/png" });
+    if (!forceDownload && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], text: shareText }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; /* else fall through to download */ }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function notReady() { alert("The image tool is still loading — please try again in a second."); }
+
+  async function exportNameCard(rootSel, name, forceDownload) {
+    if (typeof html2canvas !== "function") return notReady();
+    const footer =
+      `<span class="dl-num">Name ${name.id} of 99</span>` +
+      `<span class="dl-date">${dateForCard()}</span>` +
+      `<span class="dl-brand">${REMINDER_LINE}</span>`;
+    const blob = await renderCardCanvas(rootSel, footer);
+    const filename = `${name.translit.replace(/[^\w-]/g, "")}-name-${name.id}-of-99.png`;
+    await deliver(blob, filename, `${name.translit} — Name ${name.id} of 99 · ${REMINDER_LINE}`, forceDownload);
+  }
+
   /* ---------- Hero (name of the day) ---------- */
   function renderHero() {
     $("#hero-arabic").textContent   = todayName.arabic;
@@ -82,7 +149,9 @@
     setLearnBtn(btn, todayName.id);
     btn.onclick = () => { toggleLearned(todayName.id); setLearnBtn(btn, todayName.id); };
 
-    $("#hero-download").onclick = () => downloadCard("#hero", todayName);
+    const dl = $("#hero-download");
+    dl.textContent = canShareFiles ? "↑ Share card" : "↓ Download card";
+    dl.onclick = () => exportNameCard("#hero", todayName, false);
   }
 
   /* ---------- Progress ---------- */
@@ -121,9 +190,7 @@
   }
 
   /* ---------- Detail modal ---------- */
-  let modalName = null;
   function openModal(name) {
-    modalName = name;
     $("#modal-index").textContent    = `Name ${name.id} of 99`;
     $("#modal-arabic").textContent   = name.arabic;
     $("#modal-translit").textContent = name.translit;
@@ -134,7 +201,10 @@
     const btn = $("#modal-learn");
     setLearnBtn(btn, name.id);
     btn.onclick = () => { toggleLearned(name.id); setLearnBtn(btn, name.id); };
-    $("#modal-download").onclick = () => downloadCard("#modal-card", name);
+
+    const dl = $("#modal-download");
+    dl.textContent = canShareFiles ? "↑ Share" : "↓ Download";
+    dl.onclick = () => exportNameCard("#modal-card", name, false);
 
     $("#modal").hidden = false;
     document.body.style.overflow = "hidden";
@@ -142,41 +212,6 @@
   function closeModal() {
     $("#modal").hidden = true;
     document.body.style.overflow = "";
-  }
-
-  /* ---------- Download a card as a PNG ---------- */
-  function downloadCard(rootSel, name) {
-    if (typeof html2canvas !== "function") {
-      alert("The image tool is still loading — please try again in a second.");
-      return;
-    }
-    const node = $(rootSel);
-    html2canvas(node, {
-      backgroundColor: "#ffffff",
-      scale: 2,
-      useCORS: true,
-      onclone: (doc) => {
-        const clone = doc.querySelector(rootSel);
-        clone.querySelectorAll(".hero-actions, .modal-actions, .modal-close").forEach((el) => (el.style.display = "none"));
-        const foot = doc.createElement("div");
-        foot.className = "dl-foot";
-        foot.innerHTML =
-          `<span class="dl-num">Name ${name.id} of 99</span>` +
-          `<span class="dl-date">${dateForCard()}</span>` +
-          `<span class="dl-brand">For daily name reminders, visit theone.aclanglobal.com</span>`;
-        clone.appendChild(foot);
-      },
-    }).then((canvas) => {
-      canvas.toBlob((blob) => {
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = `${name.translit.replace(/[^\w-]/g, "")}-name-${name.id}-of-99.png`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(a.href);
-      }, "image/png");
-    }).catch(() => alert("Sorry — couldn't create the image. Please try again."));
   }
 
   /* =========================================================
@@ -200,7 +235,6 @@
     });
   }
 
-  // Opening the Quiz tab shows the intro screen (does not auto-start).
   window.startQuiz = function () { renderQuizHome(); };
 
   function bestScore() { return parseInt(localStorage.getItem(BEST_KEY) || "0", 10); }
@@ -255,15 +289,17 @@
     if (quiz.answered) return;
     quiz.answered = true;
     const correctText = correct.english;
-    const buttons = [...document.querySelectorAll(".quiz-option")];
-    buttons.forEach((b) => {
+    const isRight = opt.english === correctText;
+    document.querySelectorAll(".quiz-option").forEach((b) => {
       b.disabled = true;
-      if (b.textContent === correctText) b.classList.add("is-correct");
+      if (b.textContent === correctText) b.classList.add("is-correct"); // green = the right answer
     });
-    if (opt.english === correctText) quiz.score++;
-    else btn.classList.add("is-wrong");
-    $("#quiz-next").hidden = false;
-    $("#quiz-next").onclick = () => {
+    if (!isRight) btn.classList.add("is-wrong"); // red = your wrong pick
+    if (isRight) quiz.score++;
+
+    const next = $("#quiz-next");
+    next.hidden = false;
+    next.onclick = () => {
       if (quiz.i < QUIZ_LEN - 1) { quiz.i++; renderQuestion(); }
       else renderResult();
     };
@@ -275,14 +311,32 @@
     const pct = quiz.score / QUIZ_LEN;
     const note = pct === 1 ? "Perfect — MashaAllah!" : pct >= 0.7 ? "Beautifully done." : pct >= 0.4 ? "Good effort — keep going." : "A lovely start — try again.";
     $("#quiz").innerHTML = `
-      <div class="quiz-card">
-        <p class="quiz-eyebrow">Result</p>
+      <div class="quiz-card" id="quiz-result-card">
+        <p class="quiz-eyebrow">My Score · 99 Beautiful Names of Allah</p>
         <div class="quiz-score">${quiz.score}<span>/${QUIZ_LEN}</span></div>
         <p class="quiz-lead">${note}</p>
         <p class="quiz-best">Your best: <strong>${best}/${QUIZ_LEN}</strong></p>
-        <button class="quiz-primary" id="quiz-again" type="button">Play again</button>
+        <div class="dl-foot quiz-stamp">
+          <span class="dl-date">${dateTimeForCard()}</span>
+          <span class="dl-brand">${REMINDER_LINE}</span>
+        </div>
+        <div class="quiz-actions">
+          <button class="quiz-primary" id="quiz-again" type="button">Play again</button>
+          <button class="dl-btn" id="quiz-share" type="button">${canShareFiles ? "↑ Share score" : "↗ Share score"}</button>
+          <button class="dl-btn" id="quiz-download" type="button">↓ Download</button>
+        </div>
       </div>`;
     $("#quiz-again").onclick = beginQuiz;
+    $("#quiz-share").onclick = () => exportQuizResult(false);
+    $("#quiz-download").onclick = () => exportQuizResult(true);
+  }
+
+  async function exportQuizResult(forceDownload) {
+    if (typeof html2canvas !== "function") return notReady();
+    const blob = await renderCardCanvas("#quiz-result-card", null);
+    await deliver(blob, "my-99-names-quiz-score.png",
+      `I scored ${quiz.score}/${QUIZ_LEN} on the 99 Beautiful Names of Allah quiz! ${REMINDER_LINE}`,
+      forceDownload);
   }
 
   /* ---------- Tabs ---------- */
@@ -299,8 +353,25 @@
     if (!onNames) renderQuizHome();
   }
 
+  /* ---------- Theme ---------- */
+  function applyTheme(theme) {
+    const dark = theme === "dark";
+    document.body.classList.toggle("dark", dark);
+    const btn = $("#theme-toggle");
+    if (btn) btn.textContent = dark ? "◐  Light mode" : "◐  Dark mode";
+  }
+  function initTheme() {
+    applyTheme(localStorage.getItem(THEME_KEY) || "light");
+    $("#theme-toggle").addEventListener("click", () => {
+      const next = document.body.classList.contains("dark") ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  }
+
   /* ---------- Init ---------- */
   function init() {
+    initTheme();
     renderDate();
     renderHero();
     renderProgress();
