@@ -1,53 +1,43 @@
 /* =========================================================
-   styles.css — Asma ul-Husna
-   Apple-clean, minimal, neutral tones with soft gradients.
-   Colours/spacing live in CSS variables so theming is easy.
+   styles.css — 99 Beautiful Names of Allah
+   Aesthetic: Co-Star-inspired — stark white, grayscale,
+   elegant serif display (Newsreader) + monospace labels
+   (IBM Plex Mono), traditional Arabic (Amiri). Light theme
+   only for now; a dark toggle comes later.
    ========================================================= */
 
 :root {
-  --bg:          #f6f5f3;
-  --bg-2:        #efedea;
+  /* Grayscale palette */
+  --bg:          #ffffff;
+  --bg-2:        #f2f2f0;
   --surface:     #ffffff;
-  --surface-2:   #fbfaf9;
-  --ink:         #1c1c1e;
-  --ink-soft:    #6b6b70;
-  --ink-faint:   #9a9aa0;
-  --line:        rgba(0,0,0,0.07);
-  --accent:      #1b8a6b;   /* calm emerald */
-  --accent-soft: #e7f3ee;
-  --gold:        #b6925a;
-  --shadow:      0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06);
-  --shadow-lg:   0 8px 24px rgba(0,0,0,0.08), 0 30px 70px rgba(0,0,0,0.14);
-  --radius:      22px;
-  --radius-sm:   14px;
-  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
-  --maxw:        1080px;
-}
+  --surface-2:   #fafaf8;
+  --ink:         #0c0c0c;
+  --ink-soft:    #565654;
+  --ink-faint:   #9a9a96;
+  --line:        rgba(0,0,0,0.13);
+  --line-soft:   rgba(0,0,0,0.07);
+  --fill:        #f1f1ef;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:        #0e0f10;
-    --bg-2:      #15171a;
-    --surface:   #17191c;
-    --surface-2: #1d2024;
-    --ink:       #f3f3f4;
-    --ink-soft:  #a6a7ad;
-    --ink-faint: #6f7177;
-    --line:      rgba(255,255,255,0.09);
-    --accent:    #34c79c;
-    --accent-soft: rgba(52,199,156,0.12);
-    --gold:      #d3ac72;
-    --shadow:    0 1px 2px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.5);
-    --shadow-lg: 0 10px 30px rgba(0,0,0,0.55);
-  }
+  /* Type */
+  --serif:  "Newsreader", Georgia, "Times New Roman", serif;
+  --mono:   "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --arabic: "Amiri", "Times New Roman", serif;
+  --urdu:   "Noto Nastaliq Urdu", serif;
+
+  --shadow:    0 1px 1px rgba(0,0,0,0.03), 0 10px 30px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.10), 0 30px 80px rgba(0,0,0,0.12);
+  --radius:    18px;
+  --radius-sm: 12px;
+  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
+  --maxw:      1000px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-family: var(--serif);
   color: var(--ink);
   background: var(--bg);
   line-height: 1.5;
@@ -58,85 +48,101 @@ body {
   overflow-x: hidden;
 }
 
-/* Soft ambient gradient behind everything */
+/* Soft grayscale ambience */
 .bg-glow {
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 50% at 50% -5%, var(--accent-soft), transparent 70%),
-    radial-gradient(40% 40% at 90% 10%, rgba(182,146,90,0.10), transparent 70%),
-    linear-gradient(180deg, var(--bg), var(--bg-2));
+    radial-gradient(55% 45% at 50% -8%, rgba(0,0,0,0.05), transparent 70%),
+    linear-gradient(180deg, #ffffff, var(--bg-2));
+}
+
+/* Mono label helper */
+.mono-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 /* ---------- Header ---------- */
 .site-header {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 22px 24px 8px;
+  padding: 22px 24px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
-.brand { display: flex; align-items: center; gap: 10px; }
-.brand-mark {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: 10px;
-  padding: 4px 10px;
-  letter-spacing: 1px;
+.topdate {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
 }
-.brand-text { font-weight: 600; letter-spacing: -0.01em; }
-
 .tabs {
   display: inline-flex;
-  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 4px;
-  box-shadow: var(--shadow);
+  padding: 3px;
 }
 .tab {
   border: 0;
   background: transparent;
-  color: var(--ink-soft);
-  font: inherit;
-  font-weight: 500;
-  padding: 8px 20px;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 18px;
   border-radius: 999px;
   cursor: pointer;
   transition: color .25s var(--ease), background .25s var(--ease);
 }
-.tab.is-active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.tab.is-active { background: var(--ink); color: #fff; }
+
+/* ---------- Masthead ---------- */
+.masthead {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 40px 24px 8px;
+  text-align: center;
+}
+.masthead-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 7.5vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.masthead-sub {
+  font-family: var(--arabic);
+  font-size: clamp(20px, 4vw, 30px);
+  color: var(--ink-soft);
+  margin-top: 12px;
+  letter-spacing: 0.02em;
+}
 
 /* ---------- Layout ---------- */
 main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 .view { display: none; animation: fade .5s var(--ease); }
 .view.is-active { display: block; }
 
-.eyebrow {
-  text-align: center;
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-top: 18px;
-}
-
 /* ---------- Hero (name of the day) ---------- */
 .hero {
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 32px;
+  border-radius: 26px;
   box-shadow: var(--shadow-lg);
   text-align: center;
-  padding: 48px 28px 36px;
-  margin: 16px auto 40px;
-  max-width: 720px;
+  padding: 46px 28px 38px;
+  margin: 30px auto 44px;
+  max-width: 680px;
   position: relative;
   overflow: hidden;
   animation: rise .7s var(--ease) both;
@@ -144,88 +150,93 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 .hero::before {
   content: "";
   position: absolute;
-  top: -40%; left: 50%; transform: translateX(-50%);
-  width: 480px; height: 480px;
-  background: radial-gradient(circle, var(--accent-soft), transparent 65%);
-  z-index: 0;
-  pointer-events: none;
+  top: -45%; left: 50%; transform: translateX(-50%);
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(0,0,0,0.045), transparent 65%);
+  z-index: 0; pointer-events: none;
 }
 .hero > * { position: relative; z-index: 1; }
 
 .hero-badge {
   display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink-soft);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 5px 14px;
-  margin-bottom: 22px;
+  padding: 7px 16px;
+  margin-bottom: 26px;
+  max-width: 320px;
+  line-height: 1.5;
 }
 .hero-arabic {
-  font-family: "IBM Plex Sans Arabic", sans-serif;
-  font-weight: 600;
-  font-size: clamp(56px, 13vw, 104px);
-  line-height: 1.15;
-  letter-spacing: 0;
-  margin-bottom: 14px;
+  font-family: var(--arabic);
+  font-weight: 400;
+  font-size: clamp(64px, 15vw, 120px);
+  line-height: 1.1;
+  margin-bottom: 16px;
 }
 .hero-translit {
-  font-size: clamp(22px, 4vw, 30px);
-  font-weight: 600;
+  font-family: var(--serif);
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 400;
   letter-spacing: -0.01em;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .hero-english {
-  font-size: clamp(16px, 2.6vw, 20px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 2.8vw, 22px);
   color: var(--ink-soft);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .hero-urdu {
-  font-family: "Noto Nastaliq Urdu", serif;
+  font-family: var(--urdu);
   font-size: clamp(20px, 3.4vw, 26px);
   line-height: 2.1;
   color: var(--ink);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
-.hero-ref, .modal-ref { margin: 8px 0 4px; min-height: 1px; }
+.hero-ref, .modal-ref { margin: 6px 0 2px; min-height: 1px; }
 .ref-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--fill);
+  border: 1px solid var(--line-soft);
   border-radius: 999px;
   padding: 6px 14px;
   text-decoration: none;
-  transition: transform .2s var(--ease), opacity .2s var(--ease);
+  transition: transform .2s var(--ease), background .2s var(--ease);
 }
-.ref-pill:hover { transform: translateY(-1px); opacity: .9; }
-.ref-pill::before { content: "❝"; font-size: 12px; opacity: .7; }
+.ref-pill:hover { transform: translateY(-1px); background: #e9e9e6; }
 
-.hero-actions { margin-top: 20px; }
+.hero-actions { margin-top: 22px; }
 
 /* Learn button */
 .learn-btn {
-  font: inherit;
-  font-weight: 600;
-  font-size: 15px;
-  border: 1px solid var(--line);
-  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  background: transparent;
   color: var(--ink);
   border-radius: 999px;
-  padding: 11px 22px;
+  padding: 12px 22px;
   cursor: pointer;
-  transition: all .25s var(--ease);
+  transition: all .22s var(--ease);
 }
-.learn-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.learn-btn:hover { background: var(--fill); }
 .learn-btn.is-learned {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--ink);
   color: #fff;
 }
 .learn-btn.is-learned::before { content: "✓ "; }
@@ -235,52 +246,51 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   display: flex;
   align-items: center;
   gap: 18px;
-  max-width: 720px;
-  margin: 0 auto 44px;
-  background: var(--surface);
+  max-width: 680px;
+  margin: 0 auto 52px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 18px 22px;
-  box-shadow: var(--shadow);
 }
 .progress-ring {
   --pct: 0;
-  width: 70px; height: 70px;
-  flex: 0 0 70px;
+  width: 64px; height: 64px;
+  flex: 0 0 64px;
   border-radius: 50%;
   display: grid;
   place-content: center;
   text-align: center;
   background:
     radial-gradient(closest-side, var(--surface) 76%, transparent 77%),
-    conic-gradient(var(--accent) calc(var(--pct) * 1%), var(--line) 0);
-  font-weight: 700;
+    conic-gradient(var(--ink) calc(var(--pct) * 1%), var(--line) 0);
   line-height: 1;
-  transition: --pct .6s var(--ease);
 }
-.progress-ring span { font-size: 20px; }
-.progress-ring small { font-size: 11px; color: var(--ink-faint); display: block; }
-.progress-label { display: flex; flex-direction: column; gap: 3px; }
-.progress-label strong { font-size: 15px; }
-.progress-label span { font-size: 13px; color: var(--ink-soft); }
+.progress-ring span { font-family: var(--serif); font-size: 21px; }
+.progress-ring small { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); display: block; }
+.progress-label { display: flex; flex-direction: column; gap: 4px; }
+.progress-label strong { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; }
+.progress-label span { font-size: 15px; color: var(--ink-soft); }
 
-/* ---------- Grid of all 99 ---------- */
+/* ---------- Grid of all 99 (flows RIGHT-to-LEFT) ---------- */
 .grid-heading {
   text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 .grid {
+  direction: rtl;                /* name 1 starts top-right, flows leftward */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
+  gap: 10px;
   padding-bottom: 40px;
 }
 .card {
+  direction: ltr;
   position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -290,27 +300,27 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   cursor: pointer;
   transition: transform .2s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
 }
-.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: transparent; }
-.card-num { font-size: 11px; color: var(--ink-faint); font-weight: 600; }
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--ink); }
+.card-num { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); letter-spacing: 0.06em; }
 .card-arabic {
-  font-family: "IBM Plex Sans Arabic", sans-serif;
-  font-size: 28px;
-  font-weight: 500;
-  margin: 4px 0 6px;
+  font-family: var(--arabic);
+  font-size: 34px;
+  font-weight: 400;
+  margin: 6px 0 8px;
   direction: rtl;
 }
-.card-translit { font-size: 13px; font-weight: 600; }
+.card-translit { font-family: var(--serif); font-size: 16px; }
 .card-english { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
-.card.is-today { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
-.card.is-today .card-num::after { content: " · today"; color: var(--gold); }
+.card.is-today { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink) inset; }
+.card.is-today .card-num::after { content: " · today"; color: var(--ink); }
 .card.is-learned::before {
   content: "✓";
   position: absolute;
-  top: 8px; right: 10px;
-  font-size: 11px;
+  top: 8px; left: 10px;
+  font-size: 10px;
   color: #fff;
-  background: var(--accent);
-  width: 18px; height: 18px;
+  background: var(--ink);
+  width: 17px; height: 17px;
   border-radius: 50%;
   display: grid; place-content: center;
 }
@@ -320,57 +330,61 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 .modal[hidden] { display: none; }
 .modal-backdrop {
   position: absolute; inset: 0;
-  background: rgba(20,20,25,0.45);
-  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(7px);
   animation: fade .3s var(--ease);
 }
 .modal-card {
   position: relative;
   z-index: 1;
   width: min(440px, 100%);
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--line);
-  border-radius: 28px;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  border-radius: 24px;
   box-shadow: var(--shadow-lg);
-  padding: 40px 28px 30px;
+  padding: 42px 28px 30px;
   text-align: center;
   animation: pop .35s var(--ease);
 }
 .modal-close {
-  position: absolute; top: 14px; right: 16px;
+  position: absolute; top: 14px; right: 18px;
   border: 0; background: transparent;
   font-size: 26px; line-height: 1;
   color: var(--ink-faint);
   cursor: pointer;
 }
-.modal-index { font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: .06em; }
+.modal-index { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
 .modal-arabic {
-  font-family: "IBM Plex Sans Arabic", sans-serif;
-  font-weight: 600;
-  font-size: clamp(44px, 16vw, 72px);
+  font-family: var(--arabic);
+  font-weight: 400;
+  font-size: clamp(56px, 18vw, 88px);
   margin: 10px 0 12px;
 }
-.modal-translit { font-size: 22px; font-weight: 600; }
-.modal-english { color: var(--ink-soft); margin: 4px 0 8px; }
-.modal-urdu { font-family: "Noto Nastaliq Urdu", serif; font-size: 22px; line-height: 2; margin-bottom: 14px; }
-.modal-card .learn-btn { margin-top: 14px; }
+.modal-translit { font-family: var(--serif); font-size: 26px; }
+.modal-english { font-family: var(--serif); font-style: italic; color: var(--ink-soft); margin: 4px 0 8px; }
+.modal-urdu { font-family: var(--urdu); font-size: 22px; line-height: 2; margin-bottom: 14px; }
+.modal-card .learn-btn { margin-top: 16px; }
 
 /* ---------- Quiz placeholder ---------- */
 .quiz-placeholder {
   text-align: center;
-  padding: 80px 20px;
+  padding: 90px 20px;
   color: var(--ink-soft);
-  font-size: 18px;
+  font-style: italic;
+  font-size: 20px;
 }
 
 /* ---------- Footer ---------- */
 .site-footer {
   text-align: center;
-  padding: 30px 20px 50px;
-  color: var(--ink-faint);
-  font-size: 13px;
+  padding: 34px 20px 56px;
+  border-top: 1px solid var(--line-soft);
+  margin-top: 20px;
 }
-.site-footer a { color: var(--accent); text-decoration: none; }
+.footer-main { font-size: 16px; color: var(--ink); }
+.footer-main .heart { color: #0c0c0c; }
+.footer-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint); margin-top: 8px; }
+.site-footer a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 
 /* ---------- Animations ---------- */
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
@@ -382,8 +396,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
 }
 
 @media (max-width: 560px) {
-  .site-header { flex-direction: column; align-items: stretch; gap: 12px; }
-  .tabs { align-self: center; }
-  .progress { flex-direction: row; }
-  .hero { padding: 36px 20px 30px; border-radius: 26px; }
+  .site-header { flex-direction: column-reverse; align-items: center; gap: 14px; }
+  .masthead { padding-top: 24px; }
+  .hero { padding: 38px 20px 32px; border-radius: 22px; }
 }

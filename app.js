@@ -37,6 +37,23 @@
   const todayIndex = (dayOfYear(new Date()) - 1 + NAMES.length) % NAMES.length;
   const todayName = NAMES[todayIndex];
 
+  /* ---------- Today's date: weekday + Gregorian + Islamic (Hijri) ---------- */
+  function renderDate() {
+    const now = new Date();
+    const greg = new Intl.DateTimeFormat("en-GB", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+    }).format(now);
+    let hijri = "";
+    try {
+      hijri = new Intl.DateTimeFormat("en-GB-u-ca-islamic-umalqura", {
+        day: "numeric", month: "long", year: "numeric",
+      }).format(now);
+    } catch (e) { hijri = ""; }
+    // The Islamic formatter already includes the era ("AH"), so don't add it again.
+    const el = $("#topdate");
+    el.textContent = hijri ? `${greg}  ·  ${hijri}` : greg;
+  }
+
   /* ---------- Reference pill (links to quran.com) ---------- */
   function refHtml(name) {
     if (!name.quranRef || !name.quranUrl) return "";
@@ -77,9 +94,9 @@
     $("#progress-count").textContent = count;
     $("#progress-ring").style.setProperty("--pct", pct);
     const sub = $("#progress-sub");
-    if (count === 0)      sub.textContent = "Tap a name, then “Mark as learned” to track your progress.";
-    else if (count < 99)  sub.textContent = `${count} learned, ${NAMES.length - count} to go. Keep going 🤍`;
-    else                  sub.textContent = "MashaAllah — you’ve learned all 99 names!";
+    if (count === 0)      sub.textContent = "Saved on this device. Open a name, then “Mark as learned”.";
+    else if (count < 99)  sub.textContent = `${count} learned on this device · ${NAMES.length - count} to go 🤍`;
+    else                  sub.textContent = "MashaAllah — all 99 marked learned on this device!";
   }
 
   /* ---------- Grid of all 99 ---------- */
@@ -147,6 +164,7 @@
 
   /* ---------- Wire everything up ---------- */
   function init() {
+    renderDate();
     renderHero();
     renderProgress();
     renderGrid();
