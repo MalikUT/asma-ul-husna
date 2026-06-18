@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asma ul-Husna — The 99 Names of Allah</title>
+  <meta name="description" content="Discover, remember and understand the 99 Names of Allah (Asma ul-Husna) — Arabic, romanised, with meanings in English and Urdu, and a daily highlighted name." />
+
+  <!-- Fonts: Inter (Latin UI), IBM Plex Sans Arabic (Arabic), Noto Nastaliq Urdu (Urdu) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">۹۹</span>
+      <span class="brand-text">Asma ul-Husna</span>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab is-active" id="tab-names" role="tab" aria-selected="true" aria-controls="view-names">Names</button>
+      <button class="tab" id="tab-quiz" role="tab" aria-selected="false" aria-controls="view-quiz">Quiz</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ NAMES VIEW ============ -->
+    <section id="view-names" class="view is-active" role="tabpanel" aria-labelledby="tab-names">
+      <p class="eyebrow">The 99 Names of Allah</p>
+
+      <!-- Today's highlighted name -->
+      <article class="hero" id="hero" aria-live="polite">
+        <span class="hero-badge" id="hero-badge">Name of the day</span>
+        <h1 class="hero-arabic" id="hero-arabic" lang="ar" dir="rtl"></h1>
+        <p class="hero-translit" id="hero-translit"></p>
+        <p class="hero-english" id="hero-english"></p>
+        <p class="hero-urdu" id="hero-urdu" lang="ur" dir="rtl"></p>
+        <div class="hero-ref" id="hero-ref"></div>
+        <div class="hero-actions">
+          <button class="learn-btn" id="hero-learn" type="button"></button>
+        </div>
+      </article>
+
+      <!-- Progress -->
+      <div class="progress" id="progress">
+        <div class="progress-ring" id="progress-ring">
+          <span id="progress-count">0</span><small>/99</small>
+        </div>
+        <div class="progress-label">
+          <strong>Your journey</strong>
+          <span id="progress-sub">Tap a name, then “Mark as learned” to track your progress.</span>
+        </div>
+      </div>
+
+      <h2 class="grid-heading">All 99 Names</h2>
+      <div class="grid" id="grid" role="list"></div>
+    </section>
+
+    <!-- ============ QUIZ VIEW (built in phase 2) ============ -->
+    <section id="view-quiz" class="view" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+      <div class="quiz-placeholder">
+        <p>The flash quiz is coming next ✨</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Detail overlay for any name -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-translit">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <span class="modal-index" id="modal-index"></span>
+      <h2 class="modal-arabic" id="modal-arabic" lang="ar" dir="rtl"></h2>
+      <p class="modal-translit" id="modal-translit"></p>
+      <p class="modal-english" id="modal-english"></p>
+      <p class="modal-urdu" id="modal-urdu" lang="ur" dir="rtl"></p>
+      <div class="modal-ref" id="modal-ref"></div>
+      <button class="learn-btn" id="modal-learn" type="button"></button>
+    </article>
+  </div>
+
+  <footer class="site-footer">
+    <p>Made with reverence · Quran references link to <a href="https://quran.com" target="_blank" rel="noopener">quran.com</a> for verification.</p>
+  </footer>
+
+  <!-- data first, then logic -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
