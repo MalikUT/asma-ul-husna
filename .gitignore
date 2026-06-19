@@ -10,3 +10,7 @@
 
 # Claude Code editor files
 .claude/
+
+# Internal knowledge base (keep off the public site)
+AClan-99Names-KnowledgeBase.md
+AClan-99Names-KnowledgeBase.pdf
