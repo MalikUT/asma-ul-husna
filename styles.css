@@ -387,6 +387,9 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   transition: all .22s var(--ease);
 }
 .dl-btn:hover { background: #e9e9e6; transform: translateY(-1px); }
+/* Read-along play button — filled while playing */
+#mem-play.is-playing { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+#mem-play.is-playing:hover { background: var(--ink); }
 
 /* Footer stamped onto downloaded card images (not shown on screen) */
 .dl-foot {
@@ -721,7 +724,9 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   }
   .mem-bar .mem-count { font-size: 10px; letter-spacing: 0.03em; white-space: nowrap; }
   .mem-bar .mem-actions { gap: 6px; }
-  .mem-bar .dl-btn { padding: 8px 12px; font-size: 10px; letter-spacing: 0.05em; }
+  .mem-bar .dl-btn { padding: 8px 11px; font-size: 10px; letter-spacing: 0.05em; }
+  /* keep the "Read-along" label; just shorten the counter to save space */
+  .mem-count-word { display: none; }
   .mem { padding-bottom: 78px; }   /* clear the floating bar */
   .to-top { bottom: 74px; }        /* sit above the floating bar */
 }

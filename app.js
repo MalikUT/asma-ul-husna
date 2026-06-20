@@ -344,6 +344,44 @@
      (starts fresh/blurred every visit — it's for practising)
      ========================================================= */
   let memRevealed = new Set();
+  let memPlayTimer = null;   // Read-along autoplay
+  let memPlayIndex = 0;
+  const MEM_PLAY_GAP = 500;  // ms between reveals
+
+  function setPlayBtn(playing) {
+    const icon = $("#mem-play-icon"), text = $("#mem-play-text");
+    if (icon) icon.textContent = playing ? "⏸" : "▶";
+    if (text) text.innerHTML = playing ? "&nbsp;Pause" : "&nbsp;Read-along";
+    const btn = $("#mem-play");
+    if (btn) btn.classList.toggle("is-playing", playing);
+  }
+  function stopPlay() {
+    if (memPlayTimer) { clearInterval(memPlayTimer); memPlayTimer = null; }
+    setPlayBtn(false);
+  }
+  function playStep() {
+    const words = $("#mem-list").querySelectorAll(".mem-word");
+    if (memPlayIndex >= words.length) { stopPlay(); return; }
+    const w = words[memPlayIndex];
+    w.classList.add("is-revealed");
+    memRevealed.add(NAMES[memPlayIndex].id);
+    updateMemCount();
+    w.scrollIntoView({ block: "center" }); // instant (no smooth-scroll lag)
+    memPlayIndex++;
+  }
+  function startPlay() {
+    const words = $("#mem-list").querySelectorAll(".mem-word");
+    // fresh read-along from the top (unless resuming from a paused position)
+    if (memPlayIndex <= 0 || memPlayIndex >= words.length) {
+      words.forEach((w) => w.classList.remove("is-revealed"));
+      memRevealed.clear(); updateMemCount();
+      memPlayIndex = 0;
+    }
+    setPlayBtn(true);
+    playStep();
+    memPlayTimer = setInterval(playStep, MEM_PLAY_GAP);
+  }
+
   function renderMemorise() {
     const list = $("#mem-list");
     if (list.dataset.built) return; // build once; keep state across tab switches
@@ -367,16 +405,22 @@
     list.appendChild(frag);
     list.dataset.built = "1";
 
+    $("#mem-play").onclick = () => { if (memPlayTimer) stopPlay(); else startPlay(); };
     $("#mem-reveal-all").onclick = () => {
+      stopPlay();
       list.querySelectorAll(".mem-word").forEach((w) => w.classList.add("is-revealed"));
       NAMES.forEach((n) => memRevealed.add(n.id));
+      memPlayIndex = list.querySelectorAll(".mem-word").length;
       updateMemCount();
     };
     $("#mem-reset").onclick = () => {
+      stopPlay();
       list.querySelectorAll(".mem-word").forEach((w) => w.classList.remove("is-revealed"));
       memRevealed.clear();
+      memPlayIndex = 0;
       updateMemCount();
     };
+    setPlayBtn(false);
     updateMemCount();
   }
   function updateMemCount() { $("#mem-count").textContent = memRevealed.size; }
@@ -391,6 +435,7 @@
       $("#view-" + t).classList.toggle("is-active", on);
       $("#view-" + t).hidden = !on;
     });
+    if (which !== "memorise") stopPlay();
     if (which === "quiz") renderQuizHome();
     if (which === "memorise") renderMemorise();
   }
