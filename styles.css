@@ -240,6 +240,21 @@ body.layout-a .tabs     { order: 3; }
 .mem-arabic { font-family: var(--arabic); font-size: 40px; line-height: 1.2; white-space: nowrap; }
 .mem-meaning { font-family: var(--serif); font-size: 11px; color: var(--ink-soft); white-space: nowrap; direction: ltr; }
 
+/* Context note at the end of the recitation */
+.mem-note {
+  max-width: 620px; margin: 4px auto 0; padding-top: 24px;
+  border-top: 1px solid var(--line-soft); text-align: center;
+}
+.mem-note-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px;
+}
+.mem-note p:not(.mem-note-title) {
+  font-family: var(--serif); font-size: 14px; line-height: 1.75; color: var(--ink-soft);
+}
+.mem-note em { font-style: italic; color: var(--ink); }
+.mem-note a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+
 /* ---------- Masthead ---------- */
 .masthead {
   text-align: center;
@@ -689,15 +704,24 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   .topdate { white-space: normal; text-align: center; font-size: 10px; line-height: 1.7; max-width: 90%; }
   .hero { padding: 38px 20px 32px; border-radius: 22px; }
 
-  /* Memorise controls float as a fixed pill bar so they're always reachable */
+  /* Opening: each phrase on its own line (no horizontal overflow) */
+  .mem-opening { width: auto; max-width: 100%; margin-left: 0; transform: none; }
+  .mem-line { font-size: clamp(17px, 5.2vw, 22px); line-height: 1.9; margin-bottom: 10px; }
+  .mem-line span { display: block; white-space: normal; margin: 7px 0; }
+
+  /* Compact floating controls bar (single row, smaller) */
   .mem-bar {
-    position: fixed; left: 12px; right: 12px; bottom: 14px; top: auto;
+    position: fixed; left: 10px; right: 10px; bottom: 12px; top: auto;
     z-index: 30; margin: 0;
-    border: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    border-radius: 999px; box-shadow: var(--shadow-lg);
+    flex-wrap: nowrap; gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 16px; box-shadow: var(--shadow-lg);
     background: var(--surface);
-    padding: 10px 16px;
+    padding: 8px 12px;
   }
-  .mem { padding-bottom: 84px; }   /* clear the floating bar */
-  .to-top { bottom: 80px; }        /* sit above the floating bar */
+  .mem-bar .mem-count { font-size: 10px; letter-spacing: 0.03em; white-space: nowrap; }
+  .mem-bar .mem-actions { gap: 6px; }
+  .mem-bar .dl-btn { padding: 8px 12px; font-size: 10px; letter-spacing: 0.05em; }
+  .mem { padding-bottom: 78px; }   /* clear the floating bar */
+  .to-top { bottom: 74px; }        /* sit above the floating bar */
 }
