@@ -53,6 +53,7 @@
     </section>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab is-active" id="tab-names" role="tab" aria-selected="true" aria-controls="view-names">Names</button>
+      <button class="tab" id="tab-memorise" role="tab" aria-selected="false" aria-controls="view-memorise">Memorise</button>
       <button class="tab" id="tab-quiz" role="tab" aria-selected="false" aria-controls="view-quiz">Quiz</button>
     </nav>
   </div>
@@ -94,6 +95,27 @@
     <section id="view-quiz" class="view" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div class="quiz" id="quiz"><!-- built by app.js --></div>
     </section>
+
+    <!-- ============ MEMORISE VIEW ============ -->
+    <section id="view-memorise" class="view" role="tabpanel" aria-labelledby="tab-memorise" hidden>
+      <div class="mem">
+        <div class="mem-opening">
+          <p class="mem-line" lang="ar" dir="rtl"><span>أَعُوذُ بِٱللَّهِ مِنَ ٱلشَّيْطَٰنِ ٱلرَّجِيمِ</span><span>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span><span>هُوَ ٱللَّهُ ٱلَّذِى لَآ إِلَٰهَ إِلَّا هُوَ</span></p>
+          <p class="mem-trans">“In the name of Allah… He is Allah; there is no deity except Him.”</p>
+          <a class="mem-source" href="https://quran.com/59/22" target="_blank" rel="noopener">Surah Al-Hashr · 59:22 — verify on quran.com</a>
+        </div>
+
+        <div class="mem-bar">
+          <span class="mem-count"><strong id="mem-count">0</strong> / 99 revealed</span>
+          <div class="mem-actions">
+            <button class="dl-btn" id="mem-reveal-all" type="button">Reveal all</button>
+            <button class="dl-btn" id="mem-reset" type="button">Reset</button>
+          </div>
+        </div>
+        <p class="mem-hint">Tap a name to reveal it · tap again to hide · read right to left</p>
+        <div class="mem-sheet" id="mem-list" dir="rtl"><!-- built by app.js --></div>
+      </div>
+    </section>
   </main>
 
   <!-- Detail overlay for any name -->
@@ -122,6 +144,8 @@
     <p class="footer-main">Made with <span class="heart">♥</span> by AClan Global · Remember us in your prayers</p>
     <p class="footer-sub">Quran references link to <a href="https://quran.com" target="_blank" rel="noopener">quran.com</a> for verification.</p>
   </footer>
+
+  <button class="to-top" id="to-top" type="button" aria-label="Back to top">↑</button>
 
   <!-- Vercel Web Analytics (unique visitors, page views) — needs Analytics enabled in the Vercel dashboard -->
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>

@@ -339,18 +339,60 @@
       forceDownload);
   }
 
+  /* =========================================================
+     MEMORISE — all 99 in order, concealed; tap to reveal/hide
+     (starts fresh/blurred every visit — it's for practising)
+     ========================================================= */
+  let memRevealed = new Set();
+  function renderMemorise() {
+    const list = $("#mem-list");
+    if (list.dataset.built) return; // build once; keep state across tab switches
+    const frag = document.createDocumentFragment();
+    NAMES.forEach((name) => {
+      const w = document.createElement("button");
+      w.type = "button";
+      w.className = "mem-word";
+      w.title = `${name.id}. ${name.translit}`;
+      w.innerHTML = `<span class="mem-ink">
+          <span class="mem-arabic" lang="ar" dir="rtl">${name.arabic}</span>
+          <span class="mem-meaning">${name.english}</span>
+        </span>`;
+      w.addEventListener("click", () => {
+        const revealed = w.classList.toggle("is-revealed");
+        if (revealed) memRevealed.add(name.id); else memRevealed.delete(name.id);
+        updateMemCount();
+      });
+      frag.appendChild(w);
+    });
+    list.appendChild(frag);
+    list.dataset.built = "1";
+
+    $("#mem-reveal-all").onclick = () => {
+      list.querySelectorAll(".mem-word").forEach((w) => w.classList.add("is-revealed"));
+      NAMES.forEach((n) => memRevealed.add(n.id));
+      updateMemCount();
+    };
+    $("#mem-reset").onclick = () => {
+      list.querySelectorAll(".mem-word").forEach((w) => w.classList.remove("is-revealed"));
+      memRevealed.clear();
+      updateMemCount();
+    };
+    updateMemCount();
+  }
+  function updateMemCount() { $("#mem-count").textContent = memRevealed.size; }
+
   /* ---------- Tabs ---------- */
+  const TABS = ["names", "memorise", "quiz"];
   function switchTab(which) {
-    const onNames = which === "names";
-    $("#tab-names").classList.toggle("is-active", onNames);
-    $("#tab-quiz").classList.toggle("is-active", !onNames);
-    $("#tab-names").setAttribute("aria-selected", onNames);
-    $("#tab-quiz").setAttribute("aria-selected", !onNames);
-    $("#view-names").classList.toggle("is-active", onNames);
-    $("#view-quiz").classList.toggle("is-active", !onNames);
-    $("#view-names").hidden = !onNames;
-    $("#view-quiz").hidden = onNames;
-    if (!onNames) renderQuizHome();
+    TABS.forEach((t) => {
+      const on = t === which;
+      $("#tab-" + t).classList.toggle("is-active", on);
+      $("#tab-" + t).setAttribute("aria-selected", on);
+      $("#view-" + t).classList.toggle("is-active", on);
+      $("#view-" + t).hidden = !on;
+    });
+    if (which === "quiz") renderQuizHome();
+    if (which === "memorise") renderMemorise();
   }
 
   /* ---------- Theme ---------- */
@@ -384,6 +426,14 @@
     });
     $("#tab-names").addEventListener("click", () => switchTab("names"));
     $("#tab-quiz").addEventListener("click", () => switchTab("quiz"));
+    $("#tab-memorise").addEventListener("click", () => switchTab("memorise"));
+
+    // Floating scroll-to-top button
+    const toTop = $("#to-top");
+    window.addEventListener("scroll", () => {
+      toTop.classList.toggle("is-visible", window.scrollY > 400);
+    }, { passive: true });
+    toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   }
 
   window.AsmaApp = { NAMES, refHtml };
