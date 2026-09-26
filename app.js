@@ -26,16 +26,28 @@
   function saveLearned(set) { localStorage.setItem(LEARNED_KEY, JSON.stringify([...set])); }
   let learned = loadLearned();
 
-  /* ---------- Name of the day ---------- */
-  function dayOfYear(d) {
-    const start = new Date(d.getFullYear(), 0, 0);
-    return Math.floor((d - start) / 86400000);
-  }
-  const todayIndex = (dayOfYear(new Date()) - 1 + NAMES.length) % NAMES.length;
-  const todayName = NAMES[todayIndex];
-
   /* ---------- Dates (computed for Pakistan) ---------- */
   const TZ = "Asia/Karachi";
+
+  /* ---------- Name of the day (same for everyone, worldwide) ----------
+     Uses the Pakistan calendar date so every visitor sees the same name. */
+  function pktDayOfYear(d) {
+    const ymd = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+    const [y, m, dd] = ymd.split("-").map(Number);
+    return Math.round((Date.UTC(y, m - 1, dd) - Date.UTC(y, 0, 0)) / 86400000);
+  }
+  const todayIndex = (pktDayOfYear(new Date()) - 1 + NAMES.length) % NAMES.length;
+  const todayName = NAMES[todayIndex];
+
+  /* ---------- Clear progress & restart the journey (this device) ---------- */
+  function restartJourney() {
+    if (!confirm("Unmark all 99 names and start your journey again?")) return;
+    learned = new Set();
+    saveLearned(learned);
+    renderHero();
+    renderProgress();
+    renderGrid();
+  }
   function fmtGreg(opts) { return new Intl.DateTimeFormat("en-GB", { timeZone: TZ, ...opts }).format(new Date()); }
   function fmtHijri(opts) {
     try { return new Intl.DateTimeFormat("en-GB-u-ca-islamic-umalqura", { timeZone: TZ, ...opts }).format(new Date()); }
@@ -164,6 +176,7 @@
     if (count === 0)      sub.textContent = "Saved on this device. Open a name, then “Mark as learned”.";
     else if (count < 99)  sub.textContent = `${count} learned on this device · ${NAMES.length - count} to go 🤍`;
     else                  sub.textContent = "MashaAllah — all 99 marked learned on this device!";
+    $("#progress-restart").hidden = count < NAMES.length;
   }
 
   /* ---------- Grid (flows right-to-left) ---------- */
@@ -464,6 +477,7 @@
     renderProgress();
     renderGrid();
 
+    $("#progress-restart").addEventListener("click", restartJourney);
     $("#modal-close").addEventListener("click", closeModal);
     $("#modal-backdrop").addEventListener("click", closeModal);
     document.addEventListener("keydown", (e) => {

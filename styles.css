@@ -730,3 +730,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
   .mem { padding-bottom: 78px; }   /* clear the floating bar */
   .to-top { bottom: 74px; }        /* sit above the floating bar */
 }
+
+/* Journey restart */
+.progress-restart { align-self: flex-start; margin-top: 6px; }
+[hidden] { display: none !important; }
